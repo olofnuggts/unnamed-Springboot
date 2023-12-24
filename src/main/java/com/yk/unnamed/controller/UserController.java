@@ -16,19 +16,5 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        userService.register(user);
-        System.out.println("register");
-        return null;
-        // registration logic
-    }
 
-    @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        System.out.println("login");
-        userService.login(user.getUsername(), user.getPassword());
-        return null;
-        // login logic
-    }
 }
