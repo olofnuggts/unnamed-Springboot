@@ -1,6 +1,5 @@
 package com.yk.unnamed.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,15 +17,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="_users")
+@Table(name = "_users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
-    private String username;
+    private int id;
+//    private String username;
     private String password;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -37,15 +36,20 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return email;
     }
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

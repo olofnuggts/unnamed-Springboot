@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.4.0</version>
+			<version>42.5.1</version>
 		</dependency>
 
 		<dependency>
@@ -31,7 +31,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
+			<artifactId>jjwt-api</artifactId>
 			<version>0.12.3</version>			<!-- Use the latest version -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
@@ -64,7 +64,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
+			<artifactId>jjwt-api</artifactId>
 			<version>0.12.3</version>
 		</dependency>
 		<dependency>

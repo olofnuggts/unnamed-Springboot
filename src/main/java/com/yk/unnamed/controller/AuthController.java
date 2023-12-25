@@ -2,7 +2,7 @@ package com.yk.unnamed.controller;
 
 import com.yk.unnamed.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import org.postgresql.plugin.AuthenticationRequestType;
+// import org.postgresql.plugin.AuthenticationRequestType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
