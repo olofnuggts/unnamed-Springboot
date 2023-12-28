@@ -9,11 +9,15 @@ import com.yk.unnamed.model.TokenType;
 import com.yk.unnamed.model.User;
 import com.yk.unnamed.repository.TokenRepository;
 import com.yk.unnamed.repository.UserRepository;
+
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.apache.commons.validator.routines.EmailValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +28,24 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    public boolean validEmail(RegisterRequest request) {
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        if (!emailValidator.isValid(request.getEmail())) {
+            return false;
+        }
+        try {
+            InternetAddress emailAddr = new InternetAddress(request.getEmail());
+            emailAddr.validate();
+            return true;
+        } catch (AddressException e) {
+            return false; 
+        }
+    }
+
     public AuthenticationResponse register(RegisterRequest request) {
+        if (!validEmail(request)) {
+            return null;
+        }
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
