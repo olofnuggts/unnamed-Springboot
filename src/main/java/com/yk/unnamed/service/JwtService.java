@@ -42,14 +42,18 @@ public class JwtService {
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails);
+        return buildToken(extraClaims, userDetails, jwtExpiration);
     }
-
+    public String generateRefreshToken(
+            UserDetails userDetails
+    ) {
+        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+    }
     public String buildToken(Map<String, Object> extraClaims,
-            UserDetails userDetails) {
+            UserDetails userDetails, long expiration) {
         return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getPublicSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -77,4 +81,5 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
 
     }
+
 }
