@@ -22,7 +22,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-//    private String username;
+    // private String username;
     private String password;
     private String firstName;
     private String lastName;
@@ -36,14 +36,13 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-
     @Override
     public String getUsername() {
         return email;
     }
 
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    @OneToOne(mappedBy = "user")
+    private Token tokens;
 
     @Override
     public String getPassword() {

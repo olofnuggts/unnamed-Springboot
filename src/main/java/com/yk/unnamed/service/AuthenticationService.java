@@ -38,7 +38,7 @@ public class AuthenticationService {
             emailAddr.validate();
             return true;
         } catch (AddressException e) {
-            return false; 
+            return false;
         }
     }
 
@@ -62,10 +62,15 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, String bearerToken) {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        var user = repository.findByEmail(request.getEmail()).orElseThrow();
+        var user = repository.findByEmail(request.getEmail()).orElse(null);
+        var storedToken = tokenRepository.findByToken(bearerToken.substring(7)).orElse(null);
+        if (storedToken == null || user == null)
+            return null;
+        if (storedToken.getUser().getId() != user.getId())
+            return null;
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
