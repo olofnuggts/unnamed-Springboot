@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,15 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authService.authenticate(request));
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request,
+            @RequestHeader("Authorization") String bearerToken) {
+        AuthenticationResponse result = authService.authenticate(request, bearerToken);
+        if (bearerToken == null) {
+            return ResponseEntity.status(401).build();
+        } else if (result == null) {
+            return ResponseEntity.status(401).build();
+
+        }
+        return ResponseEntity.ok(result);
     }
 }
