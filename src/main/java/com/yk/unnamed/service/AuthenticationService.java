@@ -1,5 +1,11 @@
 package com.yk.unnamed.service;
 
+import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.yk.unnamed.controller.AuthenticationRequest;
 import com.yk.unnamed.controller.AuthenticationResponse;
 import com.yk.unnamed.controller.RegisterRequest;
@@ -14,11 +20,6 @@ import com.yk.unnamed.repository.UserRepository;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.apache.commons.validator.routines.EmailValidator;
 
 @Service
 @RequiredArgsConstructor
