@@ -3,6 +3,7 @@ package com.yk.unnamed.service;
 import com.yk.unnamed.controller.AuthenticationRequest;
 import com.yk.unnamed.controller.AuthenticationResponse;
 import com.yk.unnamed.controller.RegisterRequest;
+import com.yk.unnamed.exceptions.AuthenticationException;
 import com.yk.unnamed.model.Role;
 import com.yk.unnamed.model.Token;
 import com.yk.unnamed.model.TokenType;
@@ -44,7 +45,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (!validEmail(request)) {
-            return null;
+            throw new AuthenticationException("Invalid email address.");
         }
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -63,14 +64,21 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request, String bearerToken) {
-        authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        var user = repository.findByEmail(request.getEmail()).orElse(null);
-        var storedToken = tokenRepository.findByToken(bearerToken.substring(7)).orElse(null);
-        if (storedToken == null || user == null)
-            return null;
-        if (storedToken.getUser().getId() != user.getId())
-            return null;
+        try {
+            authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        } catch (Exception e) {
+            throw new AuthenticationException("Invalid email or password.");
+        }
+        var user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AuthenticationException("User not found."));
+        var storedToken = tokenRepository.findByToken(bearerToken.substring(7)).orElseThrow(
+                () -> new AuthenticationException("Invalid token."));
+
+        if (storedToken.getUser().getId() != user.getId()) {
+            throw new AuthenticationException("Token does not match user.");
+        }
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
