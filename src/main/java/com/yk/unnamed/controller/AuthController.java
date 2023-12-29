@@ -1,5 +1,6 @@
 package com.yk.unnamed.controller;
 
+import com.yk.unnamed.exceptions.AuthenticationException;
 import com.yk.unnamed.repository.UserRepository;
 import com.yk.unnamed.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        if (repository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.status(401).build();
-        }
+
         return ResponseEntity.ok(authService.register(request));
     }
 

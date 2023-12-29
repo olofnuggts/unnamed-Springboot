@@ -44,6 +44,9 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            throw new AuthenticationException("Used email address.");
+        }
         if (!validEmail(request)) {
             throw new AuthenticationException("Invalid email address.");
         }
