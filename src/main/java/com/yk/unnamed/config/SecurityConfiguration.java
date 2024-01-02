@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                                 .authorizeHttpRequests((authorize) -> authorize
                                                 .requestMatchers("/api/**")
                                                 .permitAll()
-                                                .requestMatchers("/api/v1/auth/authenticate/**")
+                                                .requestMatchers("/api/v1/auth/**")
                                                 // .hasAnyRole("ADMIN", "MANAGER")
                                                 // .requestMatchers(HttpMethod.GET, "")
                                                 // .hasAnyAuthority("ADMIN_READ", " MANAGER_READ")
@@ -42,7 +42,8 @@ public class SecurityConfiguration {
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .authenticationProvider(authenticationProvider)
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                                .logout(logout -> logout.logoutUrl("api/v1/auth/logout").addLogoutHandler(logoutHandler)
+                                .logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
+                                                .addLogoutHandler(logoutHandler)
                                                 .logoutSuccessHandler(((request, response,
                                                                 authentication) -> SecurityContextHolder
                                                                                 .clearContext())));
